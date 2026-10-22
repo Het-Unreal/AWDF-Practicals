@@ -1,0 +1,9 @@
+# .dockerignore for Frontend
+node_modules
+dist
+npm-debug.log
+.git
+.gitignore
+.env
+task-manager-api
+.DS_Store

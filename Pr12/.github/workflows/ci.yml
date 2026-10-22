@@ -1,0 +1,71 @@
+# ==============================================================================
+# GitHub Actions CI/CD Pipeline - Practical 12
+# Continuous Integration: Automated Linting, Building, and Testing on Push & PR
+# ==============================================================================
+name: CI Pipeline
+
+on:
+  # Triggers automatically on every push to the main branch
+  push:
+    branches: [ main ]
+  # Supplementary Problem 2: Triggers on all pull requests targeting main
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Supplementary Problem 1: Linting Job Running Before Test Job
+  lint:
+    name: Code Quality & Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Runtime (v18)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Install Backend Dependencies
+        working-directory: ./task-manager-api
+        run: npm install
+
+      - name: Run Code Linter
+        working-directory: ./task-manager-api
+        run: npm run lint
+
+  # Core CI Job: Build and Automated Testing
+  build-and-test:
+    name: Build & Automated Tests
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Runtime (v18)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Install Frontend Dependencies
+        run: npm install
+
+      - name: Build React Frontend Application
+        run: npm run build
+
+      - name: Install Backend Dependencies
+        working-directory: ./task-manager-api
+        run: npm install
+
+      - name: Run Automated Backend Tests (Jest & Supertest)
+        working-directory: ./task-manager-api
+        run: npm test
+        env:
+          NODE_ENV: test
+          JWT_SECRET: ci_test_secret_key_123
+          MONGO_URI: mongodb://localhost:27017/taskmanager_ci

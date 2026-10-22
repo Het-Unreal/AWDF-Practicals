@@ -1,0 +1,32 @@
+# Ignore all files and folders in root by default
+/*
+
+# Whitelist only practical directories 1 to 13 and .gitignore
+!/Pr1/
+!/Pr2/
+!/Pr3/
+!/Pr4/
+!/Pr5/
+!/Pr6/
+!/Pr7/
+!/Pr8/
+!/Pr9/
+!/Pr10/
+!/Pr11/
+!/Pr12/
+!/Pr13/
+!/.gitignore
+
+# Dependencies & build outputs within practicals
+node_modules/
+package-lock.json
+dist/
+build/
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
